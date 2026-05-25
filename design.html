@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireLoop - Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        coral: {
+                            50: '#fff5f3',
+                            100: '#ffe0d9',
+                            200: '#ff9a86',
+                            300: '#e68b79',
+                            400: '#bf7465',
+                            500: '#995c50',
+                        },
+                        slate: {
+                            750: '#1d242d',
+                            850: '#151a20',
+                            950: '#090b0e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --accent: #ff9a86;
+            --accent-hover: #e68b79;
+            --accent-light: #fff5f3;
+        }
+        .dark {
+            --bg: #090b0e;
+            --bg-secondary: #0f1318;
+            --card: #11151a;
+            --text: #f8fafc;
+            --text-secondary: #a3adbb;
+            --text-muted: #546881;
+            --border: #1d242d;
+            --accent: #ff9a86;
+            --accent-hover: #e68b79;
+            --accent-light: rgba(255,154,134,0.1);
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .bg-theme { background-color: var(--bg); }
+        .bg-theme-secondary { background-color: var(--bg-secondary); }
+        .bg-card { background-color: var(--card); }
+        .text-theme { color: var(--text); }
+        .text-theme-secondary { color: var(--text-secondary); }
+        .text-muted-theme { color: var(--text-muted); }
+        .border-theme { border-color: var(--border); }
+        .accent-bg { background-color: var(--accent); }
+        .accent-text { color: var(--accent); }
+        .accent-light-bg { background-color: var(--accent-light); }
+        .border-accent { border-color: var(--accent); }
+
+        .glass {
+            background: rgba(var(--bg), 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .dark .glass {
+            background: rgba(9, 11, 14, 0.8);
+        }
+
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .dark .hover-lift:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,154,134,0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--text), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff9a86, #bf7465);
+            color: #090b0e;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,154,134,0.3);
+        }
+
+        .glow {
+            box-shadow: 0 0 20px rgba(255,154,134,0.15);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-fade-in { animation: fadeInUp 0.8s ease forwards; }
+        .animate-pulse-slow { animation: pulse 4s ease-in-out infinite; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff9a86, #bf7465);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            border-radius: 2px 2px 0 0;
+        }
+        .job-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ff9a86;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ff9a86;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-theme">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-coral-200 to-coral-400 flex items-center justify-center shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <span class="font-bold text-lg tracking-tight">Programming Hero</span>
+                </div>
+
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#jobs" class="text-sm font-medium text-theme-secondary hover:text-coral-200 transition-colors">Browse Jobs</a>
+                    <a href="#features" class="text-sm font-medium text-theme-secondary hover:text-coral-200 transition-colors">Features</a>
+                    <a href="#pricing" class="text-sm font-medium text-theme-secondary hover:text-coral-200 transition-colors">Pricing</a>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-card border border-theme text-theme-secondary hover:text-coral-200 hover:border-coral-200/30 transition-all" title="Toggle Theme">
+                        <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    </button>
+
+                    <a href="#" class="hidden md:block text-sm font-medium text-theme-secondary hover:text-theme transition-colors">Sign In</a>
+                    <a href="#" class="px-4 py-2 rounded-lg btn-primary font-semibold text-sm">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-r from-coral-200/10 via-slate-500/10 to-transparent rounded-full blur-3xl animate-pulse-slow"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full accent-light-bg border border-coral-200/20 text-coral-200 mb-8 animate-fade-in">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11zm0-2a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm-5-8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm10 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-7.5 3.5a5 5 0 0 0 5 0v-1a5 5 0 0 1-5 0v1z"/></svg>
+                <span class="text-sm font-semibold">50,000+ NEW JOBS THIS MONTH</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in delay-100">
+                <span class="gradient-text">Find Your Dream</span><br>
+                <span class="gradient-text">Job Today</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-theme-secondary max-w-2xl mx-auto mb-10 animate-fade-in delay-200">
+                HireLoop connects top talent with world-class companies. Browse thousands of curated opportunities and land your next role – faster.
+            </p>
+
+            <div class="max-w-2xl mx-auto animate-fade-in delay-300">
+                <div class="flex flex-col md:flex-row gap-2 p-2 rounded-2xl bg-card border border-theme shadow-2xl">
+                    <div class="flex-1 flex items-center gap-3 px-4 py-3">
+                        <svg class="w-5 h-5 text-theme-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" placeholder="Job title, skill or company" class="w-full bg-transparent outline-none text-theme placeholder:text-theme-muted text-sm">
+                    </div>
+                    <div class="hidden md:block w-px bg-theme self-stretch my-2"></div>
+                    <div class="flex-1 flex items-center gap-3 px-4 py-3">
+                        <svg class="w-5 h-5 text-theme-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <input type="text" placeholder="Location or Remote" class="w-full bg-transparent outline-none text-theme placeholder:text-theme-muted text-sm">
+                    </div>
+                    <button class="p-3 md:px-6 md:py-3 rounded-xl btn-primary font-semibold shadow-lg flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <span class="hidden md:inline">Search</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-6 animate-fade-in delay-400">
+                <span class="flex items-center gap-1.5 text-sm text-theme-muted">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    Trending:
+                </span>
+                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-card border border-theme text-theme-muted hover:border-coral-200/50 hover:text-coral-200 transition-all cursor-pointer">Product Designer</span>
+                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-card border border-theme text-theme-muted hover:border-coral-200/50 hover:text-coral-200 transition-all cursor-pointer">AI Engineering</span>
+                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-card border border-theme text-theme-muted hover:border-coral-200/50 hover:text-coral-200 transition-all cursor-pointer">DevOps Engineer</span>
+                <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-card border border-theme text-theme-muted hover:border-coral-200/50 hover:text-coral-200 transition-all cursor-pointer">Data Scientist</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-16 md:py-24 relative overflow-hidden">
+        <div class="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
+            <div class="w-[500px] h-[500px] rounded-full bg-gradient-to-b from-coral-200/10 via-slate-500/10 to-transparent blur-3xl animate-pulse-slow"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl md:text-3xl font-bold text-theme mb-2 animate-fade-in">Assisting over 15,000 job seekers</h2>
+                <p class="text-lg text-theme-secondary animate-fade-in delay-100">find their dream positions.</p>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <!-- Stat 1 -->
+                <div class="group p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/30 hover-lift animate-fade-in">
+                    <div class="w-11 h-11 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                    </div>
+                    <div class="text-3xl md:text-4xl font-extrabold text-theme mb-1">50K</div>
+                    <div class="text-sm text-theme-muted font-medium">Active Jobs</div>
+                </div>
+
+                <!-- Stat 2 -->
+                <div class="group p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/30 hover-lift animate-fade-in delay-100">
+                    <div class="w-11 h-11 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <div class="text-3xl md:text-4xl font-extrabold text-theme mb-1">12K</div>
+                    <div class="text-sm text-theme-muted font-medium">Companies</div>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="group p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/30 hover-lift animate-fade-in delay-200">
+                    <div class="w-11 h-11 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </div>
+                    <div class="text-3xl md:text-4xl font-extrabold text-theme mb-1">2M</div>
+                    <div class="text-sm text-theme-muted font-medium">Job Seekers</div>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="group p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/30 hover-lift animate-fade-in delay-300">
+                    <div class="w-11 h-11 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="currentColor" viewBox="0 0 24 24"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    </div>
+                    <div class="text-3xl md:text-4xl font-extrabold text-theme mb-1">97%</div>
+                    <div class="text-sm text-theme-muted font-medium">Satisfaction Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jobs -->
+    <section id="jobs" class="py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-coral-200"></span>
+                    <span class="text-xs font-bold tracking-widest uppercase text-coral-200">Smart Job Discovery</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-coral-200"></span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-theme max-w-xl mx-auto">The roles you'd never find by searching</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Job Cards -->
+                <div class="job-card relative p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/20 hover-lift overflow-hidden cursor-pointer">
+                    <h3 class="text-lg font-bold text-theme mb-2 group-hover:text-coral-200 transition-colors">Frontend Developer</h3>
+                    <p class="text-sm text-theme-muted mb-4 line-clamp-2">Showcase your commitment to diversity and inclusion by highlighting initiatives.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-theme-secondary border border-theme text-xs text-theme-muted">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            New York, USA
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md accent-light-bg border border-coral-200/20 text-xs text-coral-200 font-medium">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            Hybrid
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-sm font-semibold text-coral-200 mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        €25-40/hour
+                    </div>
+                    <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-theme-secondary hover:text-coral-200 transition-all group/btn">
+                        Apply Now
+                        <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <div class="job-card relative p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/20 hover-lift overflow-hidden cursor-pointer">
+                    <h3 class="text-lg font-bold text-theme mb-2">Senior React Engineer</h3>
+                    <p class="text-sm text-theme-muted mb-4 line-clamp-2">Build scalable design systems and component libraries for enterprise clients.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-theme-secondary border border-theme text-xs text-theme-muted">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            San Francisco
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md accent-light-bg border border-coral-200/20 text-xs text-coral-200 font-medium">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+                            Remote
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-sm font-semibold text-coral-200 mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        $120-160k/year
+                    </div>
+                    <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-theme-secondary hover:text-coral-200 transition-all group/btn">
+                        Apply Now
+                        <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <div class="job-card relative p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/20 hover-lift overflow-hidden cursor-pointer">
+                    <h3 class="text-lg font-bold text-theme mb-2">Full Stack Developer</h3>
+                    <p class="text-sm text-theme-muted mb-4 line-clamp-2">End-to-end development using modern frameworks and cloud infrastructure.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-theme-secondary border border-theme text-xs text-theme-muted">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            London, UK
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md accent-light-bg border border-coral-200/20 text-xs text-coral-200 font-medium">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            On-site
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-sm font-semibold text-coral-200 mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        £60-80k/year
+                    </div>
+                    <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-theme-secondary hover:text-coral-200 transition-all group/btn">
+                        Apply Now
+                        <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <div class="job-card relative p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/20 hover-lift overflow-hidden cursor-pointer">
+                    <h3 class="text-lg font-bold text-theme mb-2">UI/UX Designer</h3>
+                    <p class="text-sm text-theme-muted mb-4 line-clamp-2">Create beautiful, accessible interfaces for next-gen productivity tools.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-theme-secondary border border-theme text-xs text-theme-muted">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Berlin, Germany
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md accent-light-bg border border-coral-200/20 text-xs text-coral-200 font-medium">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            Hybrid
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-sm font-semibold text-coral-200 mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        €50-70k/year
+                    </div>
+                    <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-theme-secondary hover:text-coral-200 transition-all group/btn">
+                        Apply Now
+                        <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <div class="job-card relative p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/20 hover-lift overflow-hidden cursor-pointer">
+                    <h3 class="text-lg font-bold text-theme mb-2">DevOps Engineer</h3>
+                    <p class="text-sm text-theme-muted mb-4 line-clamp-2">Automate infrastructure and optimize CI/CD pipelines for fast deployment.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-theme-secondary border border-theme text-xs text-theme-muted">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Singapore
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md accent-light-bg border border-coral-200/20 text-xs text-coral-200 font-medium">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+                            Remote
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-sm font-semibold text-coral-200 mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        $100-140k/year
+                    </div>
+                    <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-theme-secondary hover:text-coral-200 transition-all group/btn">
+                        Apply Now
+                        <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <div class="job-card relative p-6 rounded-2xl bg-card border border-theme hover:border-coral-200/20 hover-lift overflow-hidden cursor-pointer">
+                    <h3 class="text-lg font-bold text-theme mb-2">Product Manager</h3>
+                    <p class="text-sm text-theme-muted mb-4 line-clamp-2">Lead cross-functional teams to deliver impactful product features.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-theme-secondary border border-theme text-xs text-theme-muted">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Toronto, Canada
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md accent-light-bg border border-coral-200/20 text-xs text-coral-200 font-medium">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                            Hybrid
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-sm font-semibold text-coral-200 mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        C$90-120k/year
+                    </div>
+                    <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-theme-secondary hover:text-coral-200 transition-all group/btn">
+                        Apply Now
+                        <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button class="px-6 py-3 rounded-xl border border-theme text-sm font-semibold text-theme-secondary hover:border-coral-200/50 hover:text-coral-200 transition-all hover:-translate-y-0.5">
+                    View all job openings →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-16 md:py-24 bg-theme-secondary border-y border-theme">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-coral-200"></span>
+                    <span class="text-xs font-bold tracking-widest uppercase text-coral-200">Features</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-coral-200"></span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-theme max-w-md mx-auto">Everything you need to succeed</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Feature 1 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Smart Search</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Find your ideal job with advanced filters and AI recommendations.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Salary Insights</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Get real salary data to negotiate confidently with employers.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Top Companies</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Apply to vetted companies that are actively hiring.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Saved Jobs</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Manage applications & favorites on your personal dashboard.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">One-Click Apply</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Simplify your job applications for an easier, faster process.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Resume Builder</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Create professional resumes with modern, ATS-friendly templates.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 7 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Skill Matching</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Discover jobs that perfectly match your skills and experience.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 8 -->
+                <div class="flex gap-4 p-4 rounded-xl hover:bg-card hover:border border-transparent hover:border-theme transition-all group">
+                    <div class="shrink-0 w-12 h-12 rounded-xl accent-light-bg border border-coral-200/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-theme mb-1">Career Growth</h4>
+                        <p class="text-sm text-theme-muted leading-relaxed">Boost your career with quick interview tips and resources.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center gap-2 mb-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-coral-200"></span>
+                    <span class="text-xs font-bold tracking-widest uppercase text-coral-200">Pricing</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-coral-200"></span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-theme max-w-md mx-auto mb-8">Pay for the leverage, not the listings</h2>
+
+                <div class="inline-flex items-center gap-3 p-1 rounded-full bg-card border border-theme">
+                    <button onclick="setPricing('monthly')" id="btn-monthly" class="px-4 py-2 rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-coral-200 to-coral-300 text-slate-950 shadow-sm">Monthly</button>
+                    <button onclick="setPricing('yearly')" id="btn-yearly" class="px-4 py-2 rounded-full text-sm font-semibold transition-all text-theme-muted hover:text-theme flex items-center gap-2">
+                        Yearly
+                        <span class="px-2 py-0.5 rounded-full bg-coral-200/20 text-coral-200 text-xs">Save 25%</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+                <!-- Starter -->
+                <div class="relative p-6 md:p-8 rounded-3xl border border-theme bg-card hover:border-coral-200/20 transition-all hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-theme-secondary text-theme-muted flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            </div>
+                            <span class="font-bold text-lg">Starter</span>
+                        </div>
+                        <div class="text-right">
+                            <span id="price-starter" class="text-2xl md:text-3xl font-extrabold text-theme">$0</span>
+                            <span id="period-starter" class="text-xs text-theme-muted block">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-theme-muted mb-6">Start building your insights hub:</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Daily AI match brief (top 5)
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Verified salary bands
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Company insight dashboards
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            1-click apply, unlimited
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-theme text-sm font-semibold text-theme hover:border-coral-200/50 hover:text-coral-200 transition-all flex items-center justify-center gap-2">
+                        Choose This Plan
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <!-- Growth (Featured) -->
+                <div class="relative p-6 md:p-8 rounded-3xl border border-coral-200/30 bg-gradient-to-b from-card to-coral-200/5 shadow-xl shadow-coral-200/10 hover:-translate-y-1 transition-all">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-coral-200 to-coral-400 text-slate-950 text-xs font-bold shadow-lg">Most Popular</div>
+
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl accent-light-bg text-coral-200 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            </div>
+                            <span class="font-bold text-lg">Growth</span>
+                        </div>
+                        <div class="text-right">
+                            <span id="price-growth" class="text-2xl md:text-3xl font-extrabold text-theme">$17</span>
+                            <span id="period-growth" class="text-xs text-theme-muted block">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-theme-muted mb-6">Everything in Starter, plus:</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Priority AI matching
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Advanced salary analytics
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Resume optimization
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-coral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            LinkedIn integration
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-gradient-to-r from-coral-200 to-coral-300 text-slate-950 text-sm font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-coral-200/30 transition-all hover:gap-3">
+                        Choose This Plan
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+
+                <!-- Premium -->
+                <div class="relative p-6 md:p-8 rounded-3xl border border-theme bg-card hover:border-coral-200/20 transition-all hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-coral-400/10 text-coral-400 flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                            </div>
+                            <span class="font-bold text-lg">Premium</span>
+                        </div>
+                        <div class="text-right">
+                            <span id="price-premium" class="text-2xl md:text-3xl font-extrabold text-theme">$99</span>
+                            <span id="period-premium" class="text-xs text-theme-muted block">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold text-theme-muted mb-6">For serious job seekers:</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Everything in Growth
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Multi-profile portfolios
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Shared talent rooms
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-theme-muted">
+                            <svg class="w-4 h-4 mt-0.5 shrink-0 text-theme-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Recruiter direct access
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-theme text-sm font-semibold text-theme hover:border-coral-200/50 hover:text-coral-200 transition-all flex items-center justify-center gap-2">
+                        Choose This Plan
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-20 md:py-32 relative overflow-hidden">
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-t from-coral-200/20 via-slate-500/10 to-transparent rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full accent-light-bg border border-coral-200/20 text-coral-200 mb-6 animate-float">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                <span class="text-sm font-semibold">Join 15,000+ job seekers today</span>
+            </div>
+
+            <h2 class="text-3xl md:text-5xl font-extrabold text-theme mb-6 leading-tight">Your next role is already looking for you</h2>
+            <p class="text-lg text-theme-secondary mb-10 max-w-xl mx-auto">Build a profile in three minutes. The matches start arriving tomorrow morning.</p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="px-8 py-4 rounded-xl bg-theme text-bg font-bold text-sm shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                    Create a free account
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </button>
+                <button class="px-8 py-4 rounded-xl border border-theme text-theme font-semibold text-sm hover:border-coral-200/50 hover:text-coral-200 transition-all flex items-center justify-center">
+                    View pricing
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-theme bg-theme-secondary/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <div class="col-span-2 lg:col-span-2">
+                    <div class="flex items-center gap-2.5 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-coral-200 to-coral-400 flex items-center justify-center shadow-lg">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <span class="font-bold text-lg">Programming Hero</span>
+                    </div>
+                    <p class="text-sm text-theme-muted max-w-xs leading-relaxed">The AI-native career platform. Built for people who take their work seriously.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-coral-200 mb-4">Product</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Job discovery</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Worker AI</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Companies</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Salary data</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-coral-200 mb-4">Navigations</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Help center</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Career library</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-coral-200 mb-4">Resources</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Brand Guideline</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Newsroom</a></li>
+                        <li><a href="#" class="text-sm text-theme-muted hover:text-coral-200 transition-colors">Partners</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-theme flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <a href="#" class="w-9 h-9 rounded-lg bg-card border border-theme flex items-center justify-center text-theme-muted hover:text-coral-200 hover:border-coral-200/30 transition-all hover:-translate-y-0.5">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-lg bg-card border border-theme flex items-center justify-center text-theme-muted hover:text-coral-200 hover:border-coral-200/30 transition-all hover:-translate-y-0.5">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-lg bg-card border border-theme flex items-center justify-center text-theme-muted hover:text-coral-200 hover:border-coral-200/30 transition-all hover:-translate-y-0.5">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                </div>
+                <p class="text-xs text-theme-muted">Copyright 2024 — Programming Hero · Terms & Policy · Privacy Guideline</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const sun = document.getElementById('sun-icon');
+            const moon = document.getElementById('moon-icon');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                sun.classList.add('hidden');
+                moon.classList.remove('hidden');
+            } else {
+                html.classList.add('dark');
+                sun.classList.remove('hidden');
+                moon.classList.add('hidden');
+            }
+        }
+
+        // Pricing Toggle
+        let currentPricing = 'monthly';
+        function setPricing(type) {
+            currentPricing = type;
+            const btnMonthly = document.getElementById('btn-monthly');
+            const btnYearly = document.getElementById('btn-yearly');
+
+            if (type === 'monthly') {
+                btnMonthly.className = "px-4 py-2 rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-coral-200 to-coral-300 text-slate-950 shadow-sm";
+                btnYearly.className = "px-4 py-2 rounded-full text-sm font-semibold transition-all text-theme-muted hover:text-theme flex items-center gap-2";
+                document.getElementById('price-starter').textContent = '$0';
+                document.getElementById('period-starter').textContent = '/month';
+                document.getElementById('price-growth').textContent = '$17';
+                document.getElementById('period-growth').textContent = '/month';
+                document.getElementById('price-premium').textContent = '$99';
+                document.getElementById('period-premium').textContent = '/month';
+            } else {
+                btnYearly.className = "px-4 py-2 rounded-full text-sm font-semibold transition-all bg-gradient-to-r from-coral-200 to-coral-300 text-slate-950 shadow-sm flex items-center gap-2";
+                btnMonthly.className = "px-4 py-2 rounded-full text-sm font-semibold transition-all text-theme-muted hover:text-theme";
+                document.getElementById('price-starter').textContent = '$0';
+                document.getElementById('period-starter').textContent = '/year';
+                document.getElementById('price-growth').textContent = '$153';
+                document.getElementById('period-growth').textContent = '/year';
+                document.getElementById('price-premium').textContent = '$891';
+                document.getElementById('period-premium').textContent = '/year';
+            }
+        }
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
