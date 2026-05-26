@@ -111,7 +111,7 @@ const Navbar = () => {
               <div className="hidden md:flex items-center gap-3">
                 {/* Login Button */}
                 <Link
-                  href="/login"
+                  href="/signin"
                   className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-[#a3adbb] 
                     hover:text-[#ff9a86] transition-colors duration-200"
                 >
@@ -120,7 +120,7 @@ const Navbar = () => {
 
                 {/* Register Button */}
                 <Link
-                  href="/register"
+                  href="/signup"
                   className="px-4 py-2 text-sm font-semibold rounded-lg 
                   bg-gradient-to-r from-[#ff9a86] to-[#bf7465] 
                 text-[#090b0e]

@@ -1,3 +1,9 @@
 @import 'tailwindcss';
 @import '@heroui/styles';
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  ::selection {
+    @apply bg-[#ff9a86]/15 text-[#ff9a86];
+  }
+}

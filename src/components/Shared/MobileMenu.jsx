@@ -2,6 +2,7 @@
 
 import { X } from 'lucide-react';
 import Link from 'next/link';
+import ActiveLink from './ActiveLink';
 
 const MobileMenu = ({ open, setOpen, links, isLoggedIn }) => {
   return (
@@ -29,9 +30,9 @@ const MobileMenu = ({ open, setOpen, links, isLoggedIn }) => {
         {/* Links */}
         <div className="p-4 flex flex-col gap-2">
           {links.map(l => (
-            <Link key={l.id} href={l.path} onClick={() => setOpen(false)}>
+            <ActiveLink key={l.id} href={l.path} onClick={() => setOpen(false)}>
               {l.name}
-            </Link>
+            </ActiveLink>
           ))}
         </div>
 
@@ -52,7 +53,7 @@ const MobileMenu = ({ open, setOpen, links, isLoggedIn }) => {
               <div className="border-t p-4 flex flex-col gap-3 md:hidden">
                 {/* Login */}
                 <Link
-                  href="/login"
+                  href="/signin"
                   onClick={() => setOpen(false)}
                   className="w-full px-4 py-2 text-sm font-medium text-slate-700 dark:text-[#a3adbb]
                    rounded-xl border border-slate-200 dark:border-[#1d242d]
@@ -65,7 +66,7 @@ const MobileMenu = ({ open, setOpen, links, isLoggedIn }) => {
 
                 {/* Register */}
                 <Link
-                  href="/register"
+                  href="/signup"
                   onClick={() => setOpen(false)}
                   className="w-full px-4 py-2 text-sm font-semibold text-[#090b0e]
                   rounded-xl bg-gradient-to-r from-[#ff9a86] to-[#bf7465]
