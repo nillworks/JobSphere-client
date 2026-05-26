@@ -28,7 +28,7 @@ const ProfileDropdown = ({
         className="flex items-center gap-2 rounded-full border p-1 pr-3 bg-white dark:bg-[#11151a]"
       >
         <img
-          src={user?.avatar || 'https://i.pravatar.cc/100'}
+          src={user?.image || 'https://i.pravatar.cc/100'}
           className="h-8 w-8 rounded-full"
         />
         <span className="text-sm font-medium">{user?.name || 'Guest'}</span>
@@ -65,10 +65,10 @@ const ProfileDropdown = ({
         {/* Logout */}
         <button
           onClick={() => {
+            onLogout();
             setProfileOpen(false);
-            onLogout?.();
           }}
-          className="w-full flex items-center gap-2 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
+          className="w-full cursor-pointer flex items-center gap-2 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
         >
           <LogOut size={16} />
           Logout

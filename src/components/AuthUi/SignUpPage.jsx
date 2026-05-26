@@ -12,33 +12,69 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import { authClient, signOut } from '@/lib/auth-client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const SignUpPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setError('');
 
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+    const AllData = Object.fromEntries(formData.entries());
 
-    if (data.password.length < 6) {
+    if (AllData.password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return;
     }
 
-    if (data.password !== data.confirmPassword) {
+    if (AllData.password !== AllData.confirmPassword) {
       setError('Passwords do not match.');
       return;
     }
+    console.log(AllData);
+    setLoading(true);
 
-    console.log('Sign Up Data:', data);
+    // Enable authentiCation Email & Password SignUp
+    const { data, error } = await authClient.signUp.email({
+      name: AllData?.name,
+      email: AllData?.email,
+      password: AllData?.password,
+      image: AllData?.image,
+      callbackURL: '/',
+    });
+
+    if (data) {
+      signOut();
+      toast.success('Account created successfully', {
+        description: 'Welcome to JobSphere! Your account is ready to use.',
+        className:
+          'bg-gradient-to-r from-[#ff9a86]/10 to-transparent dark:from-[#11151a] dark:to-[#0b0e12] border border-[#ff9a86]/30 text-slate-900 dark:text-white',
+      });
+      router.push('/signin');
+    }
+
+    if (error) {
+      toast.error('Signup failed', {
+        description: error.message,
+        className:
+          'bg-white dark:bg-[#11151a] border border-red-400/40 text-red-600 dark:text-red-400',
+        style: {
+          boxShadow: '0 10px 30px rgba(255,0,0,0.12)',
+        },
+      });
+    }
+    setLoading(false);
   };
 
   return (
@@ -309,13 +345,20 @@ const SignUpPage = () => {
 
               <button
                 type="submit"
-                className="group/btn w-full cursor-pointer flex items-center justify-center gap-2 bg-gradient-to-br from-[#ff9a86] to-[#bf7465] text-[#090b0e] font-bold shadow-lg hover:shadow-[0_15px_30px_rgba(255,154,134,0.4)] hover:-translate-y-1 active:scale-95 active:translate-y-0 transition-all duration-300 rounded-xl py-3.5 mt-8 relative overflow-hidden"
+                disabled={loading}
+                className="group/btn w-full cursor-pointer flex items-center justify-center gap-2 bg-gradient-to-br from-[#ff9a86] to-[#bf7465] text-[#090b0e] font-bold rounded-xl py-3.5 mt-8 disabled:opacity-70"
               >
-                {/* Button Shine Effect */}
-                <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-[1500ms] ease-in-out bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
-
-                <span className="relative z-10 tracking-wide">Sign Up</span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
+                {loading ? (
+                  <>
+                    <span className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full"></span>
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    Sign Up
+                    <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
               </button>
             </form>
 

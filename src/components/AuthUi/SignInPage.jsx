@@ -3,16 +3,51 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const SignInPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const router = useRouter();
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    console.log('Sign In Data:', data);
+    const allData = Object.fromEntries(formData.entries());
+
+    const { data, error } = await authClient.signIn.email({
+      email: allData?.email,
+      password: allData?.password,
+      rememberMe: true,
+      callbackURL: '/',
+    });
+
+    if (data) {
+      toast.success('Login successful', {
+        description:
+          'Welcome back to JobSphere! You have successfully signed in.',
+        className:
+          'bg-gradient-to-r from-[#ff9a86]/10 to-transparent dark:from-[#11151a] dark:to-[#0b0e12] border border-[#ff9a86]/30 text-slate-900 dark:text-white',
+      });
+
+      await router.replace('/');
+      router.refresh();
+    }
+
+    if (error) {
+      toast.error('Login failed', {
+        description:
+          error.message ||
+          'Something went wrong. Please check your credentials and try again.',
+        className:
+          'bg-white dark:bg-[#11151a] border border-red-400/40 text-red-600 dark:text-red-400',
+        style: {
+          boxShadow: '0 10px 30px rgba(255,0,0,0.12)',
+        },
+      });
+    }
   };
 
   return (

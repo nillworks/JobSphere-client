@@ -3,8 +3,9 @@
 import { X } from 'lucide-react';
 import Link from 'next/link';
 import ActiveLink from './ActiveLink';
+import { signOut } from '@/lib/auth-client';
 
-const MobileMenu = ({ open, setOpen, links, isLoggedIn }) => {
+const MobileMenu = ({ open, setOpen, links, isLoggedIn, handleSignOut }) => {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
       <div
@@ -40,13 +41,33 @@ const MobileMenu = ({ open, setOpen, links, isLoggedIn }) => {
         <div className="border-t p-4 flex flex-col gap-2">
           {isLoggedIn ? (
             <>
-              <Link href="/dashboard" onClick={() => setOpen(false)}>
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-[#11151a]"
+              >
                 Dashboard
               </Link>
-              <Link href="/profile" onClick={() => setOpen(false)}>
+
+              <Link
+                href="/profile"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-[#11151a]"
+              >
                 Profile
               </Link>
-              <button className="text-red-500 text-left">Logout</button>
+
+              <div className="my-2 border-t border-slate-200 dark:border-slate-700" />
+
+              <button
+                onClick={() => {
+                  handleSignOut();
+                  setOpen(false);
+                }}
+                className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-red-500 transition-all hover:bg-red-50 dark:hover:bg-red-500/10"
+              >
+                Logout
+              </button>
             </>
           ) : (
             <>

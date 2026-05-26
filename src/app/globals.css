@@ -7,3 +7,15 @@
     @apply bg-[#ff9a86]/15 text-[#ff9a86];
   }
 }
+
+root {
+  --toast-bg: #ffffff;
+  --toast-text: #0f172a;
+  --toast-border: #e2e8f0;
+}
+
+.dark {
+  --toast-bg: #11151a;
+  --toast-text: #f8fafc;
+  --toast-border: #1d242d;
+}

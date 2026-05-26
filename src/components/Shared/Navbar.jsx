@@ -8,15 +8,19 @@ import ActiveLink from './ActiveLink';
 import MobileMenu from './MobileMenu';
 import ProfileDropdown from './ProfileDropdown';
 import { SITE_NAME } from './brand';
+import { signOut, useSession } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
-
   const profileRef = useRef(null);
 
-  const user = false;
+  const { data } = useSession();
+
+  const user = data?.user;
   const isLoggedIn = user;
 
   //  LOAD THEME ON FIRST RENDER
@@ -67,6 +71,21 @@ const Navbar = () => {
         { id: 2, name: 'Jobs', path: '/jobs' },
       ];
 
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    signOut();
+
+    toast.error('Logged out successfully', {
+      description: 'You have been signed out of your account.',
+      className:
+        'bg-gradient-to-r from-[#ff9a86]/10 to-transparent dark:from-[#11151a] dark:to-[#0b0e12] border border-[#ff9a86]/30 text-slate-900 dark:text-white',
+    });
+
+    router.push('/signin');
+    router.refresh();
+  };
+
   return (
     <>
       <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-[#090b0e]/80 backdrop-blur border-b border-slate-200 dark:border-[#1d242d]">
@@ -105,7 +124,7 @@ const Navbar = () => {
                 profileOpen={profileOpen}
                 setProfileOpen={setProfileOpen}
                 profileRef={profileRef}
-                onLogout={() => console.log('logout')}
+                onLogout={() => handleSignOut()}
               />
             ) : (
               <div className="hidden md:flex items-center gap-3">
@@ -147,6 +166,7 @@ const Navbar = () => {
         setOpen={setOpen}
         links={links}
         isLoggedIn={isLoggedIn}
+        handleSignOut={handleSignOut}
       />
     </>
   );
