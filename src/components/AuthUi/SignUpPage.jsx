@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { authClient, signOut } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { FcGoogle } from 'react-icons/fc';
 
 const SignUpPage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -75,6 +76,12 @@ const SignUpPage = () => {
       });
     }
     setLoading(false);
+  };
+
+  const handleGoogleSign = async () => {
+    const data = await authClient.signIn.social({
+      provider: 'google',
+    });
   };
 
   return (
@@ -343,6 +350,7 @@ const SignUpPage = () => {
                 </label>
               </div>
 
+              {/* Account Crate Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -359,6 +367,17 @@ const SignUpPage = () => {
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
+              </button>
+
+              {/* Continue with Google Login */}
+              <button
+                type="button"
+                onClick={() => handleGoogleSign()}
+                className="w-full flex items-center cursor-pointer justify-center gap-3 border border-slate-200 dark:border-[#1d242d] bg-white dark:bg-[#090b0e]/60 text-slate-700 dark:text-slate-200 rounded-xl py-3.5 font-semibold transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 group/google"
+              >
+                <FcGoogle className="text-xl group-hover/google:scale-110 transition-transform" />
+
+                <span>Continue with Google</span>
               </button>
             </form>
 
