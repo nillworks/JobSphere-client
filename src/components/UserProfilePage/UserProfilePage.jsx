@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   User,
   Camera,
@@ -11,6 +11,7 @@ import {
   Briefcase,
   Calendar,
   Check,
+  Clock,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { authClient, useSession } from '@/lib/auth-client';
@@ -18,11 +19,53 @@ import { useRouter } from 'next/navigation';
 
 const UserProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data } = useSession();
+  const [mounted, setMounted] = useState(false);
+  const { data, isPending } = useSession();
   const user = data?.user;
   const router = useRouter();
 
-  console.log(user);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isPending && !user) {
+      router.push('/signin');
+    }
+  }, [isPending, user, router]);
+
+  const formatDate = (dateInput) => {
+    if (!dateInput) return 'N/A';
+    try {
+      const date = new Date(dateInput);
+      if (isNaN(date.getTime())) return 'N/A';
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch (e) {
+      return 'N/A';
+    }
+  };
+
+  if (isPending || !mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#090b0e]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0 rounded-full border-4 border-slate-200 dark:border-slate-800"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-[#ff9a86] border-t-transparent animate-spin"></div>
+          </div>
+          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium animate-pulse">
+            Loading Profile...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -119,12 +162,12 @@ const UserProfilePage = () => {
                   </div>
                 </h1>
                 <p className="text-lg text-slate-600 dark:text-[#a3adbb] mt-1 font-medium">
-                  {user.role}
+                  {user.role || 'Member'}
                 </p>
               </div>
 
               <p className="text-slate-700 dark:text-slate-300 max-w-2xl leading-relaxed text-lg">
-                {user.bio}
+                {user.bio || 'No bio added yet.'}
               </p>
 
               {/* Meta details */}
@@ -135,15 +178,15 @@ const UserProfilePage = () => {
                 </div>
                 <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                   <MapPin className="w-5 h-5 text-[#ff9a86]" />
-                  <span>{user.location}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-                  <Briefcase className="w-5 h-5 text-[#ff9a86]" />
-                  <span>Available for work</span>
+                  <span>{user.location || 'Not specified'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
                   <Calendar className="w-5 h-5 text-[#ff9a86]" />
-                  <span>Joined {user.joined}</span>
+                  <span>Joined {formatDate(user.createdAt)}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
+                  <Clock className="w-5 h-5 text-[#ff9a86]" />
+                  <span>Updated {formatDate(user.updatedAt)}</span>
                 </div>
               </div>
             </div>
@@ -210,7 +253,7 @@ const UserProfilePage = () => {
               <div className="flex flex-col items-center sm:items-start sm:flex-row gap-6">
                 <div className="relative group/modal-avatar">
                   <div className="h-24 w-24 rounded-full border-2 border-[#1d242d] bg-[#090b0e] overflow-hidden relative">
-                    {user.image ? (
+                    {user?.image ? (
                       <img
                         src={
                           user?.image ||
