@@ -162,6 +162,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <MobileMenu
+        user={user}
         open={open}
         setOpen={setOpen}
         links={links}

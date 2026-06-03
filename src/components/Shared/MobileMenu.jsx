@@ -5,7 +5,14 @@ import Link from 'next/link';
 import ActiveLink from './ActiveLink';
 import { signOut } from '@/lib/auth-client';
 
-const MobileMenu = ({ open, setOpen, links, isLoggedIn, handleSignOut }) => {
+const MobileMenu = ({
+  open,
+  setOpen,
+  links,
+  isLoggedIn,
+  handleSignOut,
+  user,
+}) => {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
       <div
@@ -42,7 +49,11 @@ const MobileMenu = ({ open, setOpen, links, isLoggedIn, handleSignOut }) => {
           {isLoggedIn ? (
             <>
               <Link
-                href="/dashboard"
+                href={
+                  user.role === 'recruiter'
+                    ? '/dashboard/recruiter'
+                    : '/dashboard/jobseeker'
+                }
                 onClick={() => setOpen(false)}
                 className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-[#11151a]"
               >

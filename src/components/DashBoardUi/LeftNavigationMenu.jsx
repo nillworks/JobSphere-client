@@ -31,7 +31,7 @@ const LeftNavigationMenu = () => {
     { name: 'Dashboard', href: '/dashboard/recruiter', icon: LayoutDashboard },
     {
       name: 'My Company',
-      href: '/dashboard/recruiter/company',
+      href: '/dashboard/recruiter/my-company',
       icon: Building2,
     },
     { name: 'Manage Jobs', href: '/dashboard/recruiter/jobs', icon: Briefcase },

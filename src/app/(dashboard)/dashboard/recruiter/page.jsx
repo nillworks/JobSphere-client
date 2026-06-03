@@ -41,7 +41,7 @@ const Recruiter = async () => {
             </div>
             <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-[#11151a] flex items-center justify-center overflow-hidden border border-slate-300 dark:border-[#1d242d]">
               <span className="text-slate-600 dark:text-[#ff9a86] font-bold text-lg">
-                A
+                {user?.name?.charAt(0)}
               </span>
             </div>
           </div>
