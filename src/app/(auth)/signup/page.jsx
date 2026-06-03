@@ -1,5 +1,4 @@
 import SignUpPage from '@/components/AuthUi/SignUpPage';
-import React from 'react';
 
 const page = () => {
   return (

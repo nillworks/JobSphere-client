@@ -11,6 +11,7 @@ import {
   Image as ImageIcon,
   AlertCircle,
 } from 'lucide-react';
+import { Description, Label, RadioGroup, Radio } from '@heroui/react';
 import Link from 'next/link';
 import { authClient, signOut } from '@/lib/auth-client';
 import { toast } from 'sonner';
@@ -52,6 +53,7 @@ const SignUpPage = () => {
       email: AllData?.email,
       password: AllData?.password,
       image: AllData?.image,
+      role: AllData?.role,
       callbackURL: '/',
     });
 
@@ -318,6 +320,33 @@ const SignUpPage = () => {
                       )}
                     </button>
                   </div>
+                </div>
+
+                {/* Role Selection */}
+                <div className="flex flex-col gap-4">
+                  {/* <Label>Subscription plan</Label> */}
+                  <RadioGroup
+                    defaultValue="seeker"
+                    name="role"
+                    orientation="horizontal"
+                  >
+                    <Radio value="seeker" className="group">
+                      <Radio.Control className="data-[selected=true]:bg-[#ff9a86] data-[selected=true]:border-[#ff9a86] group-data-[selected=true]:bg-[#ff9a86] group-data-[selected=true]:border-[#ff9a86]">
+                        <Radio.Indicator />
+                      </Radio.Control>
+                      <Radio.Content>
+                        <Label>Job Seeker</Label>
+                      </Radio.Content>
+                    </Radio>
+                    <Radio value="recruiter" className="group">
+                      <Radio.Control className="data-[selected=true]:bg-[#ff9a86] data-[selected=true]:border-[#ff9a86] group-data-[selected=true]:bg-[#ff9a86] group-data-[selected=true]:border-[#ff9a86]">
+                        <Radio.Indicator />
+                      </Radio.Control>
+                      <Radio.Content>
+                        <Label>Recruiter</Label>
+                      </Radio.Content>
+                    </Radio>
+                  </RadioGroup>
                 </div>
               </div>
 
