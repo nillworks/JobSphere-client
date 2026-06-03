@@ -29,9 +29,8 @@ export default function RootLayout({ children }) {
               'dark:bg-[#11151a] dark:text-white bg-white text-slate-900 border border-slate-200 dark:border-[#1d242d]',
           }}
         />
-        <Navbar />
+
         {children}
-        <Footer />
       </body>
     </html>
   );

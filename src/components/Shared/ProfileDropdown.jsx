@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { LogOut, Settings, User, LayoutDashboard } from 'lucide-react';
+// import { useSession } from '@/lib/auth-client';
 
 const ProfileDropdown = ({
   user,
@@ -10,9 +11,15 @@ const ProfileDropdown = ({
   profileRef,
   onLogout,
 }) => {
+  // const { data } = useSession();
+  // const user = data?.user;
+
   const items = [
     {
-      href: '/dashboard',
+      href:
+        user.role === 'recruiter'
+          ? '/dashboard/recruiter'
+          : '/dashboard/jobseeker',
       label: 'Dashboard',
       icon: <LayoutDashboard size={16} />,
     },
