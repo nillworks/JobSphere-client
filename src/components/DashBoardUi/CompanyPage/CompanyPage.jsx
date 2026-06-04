@@ -1,5 +1,8 @@
-import React from 'react';
+'use client';
+
+import { useState } from 'react';
 import CompanyCard from './CompanyCard';
+import CompanyRegisterModule from './CompanyRegisterModule';
 import { Plus } from 'lucide-react';
 
 const companies = [
@@ -42,8 +45,10 @@ const companies = [
 ];
 
 const CompanyPage = () => {
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
   return (
-    <section className="w-full px-4 py-3 h-full flex flex-col gap-8">
+    <section className="w-full px-4 py-3 py-20 h-full flex flex-col gap-8">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -54,7 +59,10 @@ const CompanyPage = () => {
             Manage your registered companies and their verification states.
           </p>
         </div>
-        <button className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-sm cursor-pointer active:scale-95 flex-shrink-0">
+        <button
+          onClick={() => setIsRegisterOpen(true)}
+          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl text-sm font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-sm cursor-pointer active:scale-95 flex-shrink-0"
+        >
           <Plus className="w-4 h-4" />
           Register a company
         </button>
@@ -66,6 +74,11 @@ const CompanyPage = () => {
           <CompanyCard key={company.id} company={company} />
         ))}
       </div>
+
+      <CompanyRegisterModule
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
+      />
     </section>
   );
 };
