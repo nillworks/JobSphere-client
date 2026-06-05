@@ -32,7 +32,7 @@ const RecruiterAllJobPost = () => {
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
 
   return (
-    <section className="w-full px-4 py-3 h-full flex flex-col gap-8">
+    <section className="w-full px-4 py-3 pt-20 h-full flex flex-col gap-8">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

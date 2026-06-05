@@ -1,10 +1,18 @@
-import React from 'react';
+'use client';
+
+import CrateJob from '@/lib/Action/CrateJob';
+import { useSession } from '@/lib/auth-client';
 import { X, Briefcase, FileText } from 'lucide-react';
+import { toast } from 'sonner';
 
 const CreateJobModule = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  const handleSubmit = e => {
+  const { data: session } = useSession();
+
+  const user = session?.user;
+
+  const handleSubmit = async e => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
@@ -12,10 +20,23 @@ const CreateJobModule = ({ isOpen, onClose }) => {
     // Simulate creating a new job and passing it back to parent
     const newJob = {
       ...data,
+      userId: user?.id,
       isRemote: data.isRemote === 'on' ? true : false,
     };
 
-    console.log(newJob);
+    const res = await CrateJob(newJob);
+
+    if (res.acknowledged) {
+      toast.success('Job Created', {
+        description: 'The job has been created successfully.',
+      });
+    }
+
+    if (!res.acknowledged) {
+      toast.error('Creation Failed', {
+        description: 'Unable to create the job. Please try again.',
+      });
+    }
 
     onClose();
   };
@@ -373,25 +394,25 @@ const CreateJobModule = ({ isOpen, onClose }) => {
               <input type="hidden" name="companyId" value="acme-corp" />
               <input type="hidden" name="status" value="active" />
             </div>
-          </form>
-        </div>
 
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 p-5 border-t border-slate-200 dark:border-[#333] bg-slate-50/50 dark:bg-[#1a1a1a]">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-[#222] border border-slate-300 dark:border-[#444] rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a2a2a] transition-colors shadow-sm"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            form="create-job-form"
-            className="px-5 py-2.5 text-sm font-bold text-white dark:text-slate-900 bg-slate-900 dark:bg-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-sm active:scale-95"
-          >
-            Post Job
-          </button>
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-3 p-5 border-t border-slate-200 dark:border-[#333] bg-slate-50/50 dark:bg-[#1a1a1a]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-[#222] border border-slate-300 dark:border-[#444] rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a2a2a] transition-colors shadow-sm"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="create-job-form"
+                className="px-5 py-2.5 cursor-pointer text-sm font-bold text-white dark:text-slate-900 bg-slate-900 dark:bg-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-sm active:scale-95"
+              >
+                Post Job
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
