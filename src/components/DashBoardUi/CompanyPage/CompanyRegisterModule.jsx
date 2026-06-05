@@ -1,14 +1,83 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { X, Upload, MapPin } from 'lucide-react';
+import CrateCompany from '@/lib/Action/CrateCompany';
+import { toast } from 'sonner';
+import { useSession } from '@/lib/auth-client';
+import Image from 'next/image';
 
 const CompanyRegisterModule = ({ isOpen, onClose }) => {
+  const [logoUrl, setLogoUrl] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+
+  const { data: session } = useSession();
+  const user = session?.user;
+
   if (!isOpen) return null;
 
-  const handleSubmit = e => {
+  const handleImageUpload = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const apiKey =
+        process.env.NEXT_PUBLIC_IMAGE_UPLOAD_API ||
+        '01c921f49e5c5aa306844f74a512b9d9';
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        setLogoUrl(data.data.display_url);
+      } else {
+        console.error('Image upload failed:', data);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    console.log('Collected Form Data:', data);
+    const companyData = Object.fromEntries(formData.entries());
+
+    if (logoUrl) {
+      companyData.logo = logoUrl;
+    } else {
+      delete companyData.logo;
+    }
+
+    const newCompanyData = {
+      ...companyData,
+      status: 'pending',
+      recruiterId: user?.id,
+    };
+    console.log(newCompanyData);
+
+    const res = await CrateCompany(newCompanyData);
+    if (res.success) {
+      toast.success('Company Created', {
+        description: 'Your company has been successfully added.',
+      });
+    }
+    if (!res.success) {
+      toast.error('Creation Failed', {
+        description: 'Something went wrong. Please try again.',
+      });
+    }
 
     onClose();
   };
@@ -194,22 +263,49 @@ const CompanyRegisterModule = ({ isOpen, onClose }) => {
                   Company Logo
                 </label>
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-lg border border-dashed border-slate-300 dark:border-[#444] bg-slate-50 dark:bg-[#222] text-slate-500 hover:bg-slate-100 dark:hover:bg-[#2a2a2a] transition-colors cursor-pointer relative overflow-hidden flex-shrink-0 group">
+                  <div className="flex items-center justify-center w-16 h-16 rounded-xl border-2 border-dashed border-slate-300 dark:border-[#444] bg-slate-50 dark:bg-[#222] text-slate-500 hover:bg-slate-100 dark:hover:bg-[#2a2a2a] hover:border-slate-400 dark:hover:border-slate-500 transition-all cursor-pointer relative overflow-hidden flex-shrink-0 group">
                     <input
                       type="file"
-                      name="logo"
+                      name="logo_file"
                       id="logo"
-                      accept="image/png, image/jpeg"
-                      className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                      accept="image/png, image/jpeg, image/webp"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                      onChange={handleImageUpload}
+                      disabled={isUploading}
                     />
-                    <Upload className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    {isUploading ? (
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    ) : logoUrl ? (
+                      <div className="relative w-full h-full group">
+                        <Image
+                          width={400}
+                          height={400}
+                          src={logoUrl}
+                          alt="Company logo preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                          <Upload className="w-5 h-5 text-white" />
+                        </div>
+                      </div>
+                    ) : (
+                      <Upload className="w-5 h-5 group-hover:scale-110 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-all z-10" />
+                    )}
                   </div>
                   <div className="flex flex-col justify-center">
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                      Upload image
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                      {isUploading
+                        ? 'Uploading logo...'
+                        : logoUrl
+                          ? 'Logo uploaded'
+                          : 'Upload image'}
                     </span>
                     <span className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      PNG, JPG up to 5MB
+                      {logoUrl
+                        ? 'Click image to replace'
+                        : 'PNG, JPG up to 5MB'}
                     </span>
                   </div>
                 </div>
@@ -240,14 +336,14 @@ const CompanyRegisterModule = ({ isOpen, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-[#222] border border-slate-300 dark:border-[#444] rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a2a2a] transition-colors shadow-sm"
+            className="px-5 py-2.5 cursor-pointer text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-[#222] border border-slate-300 dark:border-[#444] rounded-lg hover:bg-slate-50 dark:hover:bg-[#2a2a2a] transition-colors shadow-sm"
           >
             Cancel
           </button>
           <button
             type="submit"
             form="register-company-form"
-            className="px-5 py-2.5 text-sm font-bold text-white dark:text-slate-900 bg-slate-900 dark:bg-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-sm active:scale-95"
+            className="px-5 cursor-pointer py-2.5 text-sm font-bold text-white dark:text-slate-900 bg-slate-900 dark:bg-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-sm active:scale-95"
           >
             Register Company
           </button>
