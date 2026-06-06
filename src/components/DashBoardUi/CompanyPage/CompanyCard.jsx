@@ -13,29 +13,33 @@ const CompanyCard = ({ company }) => {
         {/* Top Section */}
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center font-black text-2xl text-slate-900 shadow-sm overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-              {company.logo}
+            <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center font-black text-2xl text-slate-900 dark:text-slate-100 shadow-sm overflow-hidden flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+              {typeof company.logo === 'string' && (company.logo.startsWith('http') || company.logo.startsWith('/')) ? (
+                <img src={company.logo} alt="logo" className="w-full h-full object-contain p-1" />
+              ) : (
+                typeof company.logo === 'string' ? company.logo.substring(0, 2) : (typeof company.name === 'string' ? company.name.charAt(0) : 'C')
+              )}
             </div>
             <div>
               <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#ff9a86] transition-colors line-clamp-1">
-                {company.name}
+                {typeof company.name === 'string' ? company.name : 'Unknown Company'}
               </h3>
               <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                {company.industry}
+                {typeof company.industry === 'string' ? company.industry : 'N/A'}
               </p>
             </div>
           </div>
           <span
             className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase shadow-sm ${isApproved ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'}`}
           >
-            {company.status}
+            {typeof company.status === 'string' ? company.status : 'PENDING'}
           </span>
         </div>
 
         {/* Description */}
         <div className="mb-6 flex-grow">
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-3">
-            {company.description}
+            {typeof company.description === 'string' ? company.description : 'No description available.'}
           </p>
         </div>
 
@@ -47,17 +51,19 @@ const CompanyCard = ({ company }) => {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
               <MapPin className="w-4 h-4" />
-              <span className="text-xs font-medium">{company.location}</span>
+              <span className="text-xs font-medium">
+                {typeof company.location === 'string' ? company.location : 'Remote'}
+              </span>
             </div>
             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
               <Users className="w-4 h-4" />
               <span className="text-xs font-medium">
-                {company.employeeCount}
+                {typeof company.employeeCount === 'string' || typeof company.employeeCount === 'number' ? company.employeeCount : '10-50'}
               </span>
             </div>
           </div>
           <Link
-            href={company?.website}
+            href={typeof company?.website === 'string' ? company.website : '#'}
             className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:!text-[#ff9a86] transition-colors w-max group/link"
           >
             <Globe className="w-4 h-4 group-hover/link:animate-spin-slow" />
