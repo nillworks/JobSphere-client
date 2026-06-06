@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import JobCard from '../../Shared/JobCard';
 import CreateJobModule from './CreateJobModule';
+import JobListShow from './JobListShow';
 
 const initialJobs = [
   {
@@ -28,7 +29,7 @@ const initialJobs = [
   },
 ];
 
-const RecruiterAllJobPost = () => {
+const RecruiterAllJobPost = ({ recruiterJobData }) => {
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
 
   return (
@@ -53,7 +54,7 @@ const RecruiterAllJobPost = () => {
       </div>
 
       {/* Jobs Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {initialJobs.map(job => (
           <JobCard
             key={job.id}
@@ -65,6 +66,11 @@ const RecruiterAllJobPost = () => {
             salary={job.salary}
           />
         ))}
+      </div> */}
+
+      {/* Job List */}
+      <div>
+        <JobListShow jobsListData={recruiterJobData} />
       </div>
 
       <CreateJobModule
