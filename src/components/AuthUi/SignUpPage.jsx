@@ -15,7 +15,7 @@ import { Description, Label, RadioGroup, Radio } from '@heroui/react';
 import Link from 'next/link';
 import { authClient, signOut } from '@/lib/auth-client';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 
 const SignUpPage = () => {
@@ -24,6 +24,8 @@ const SignUpPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/signin';
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
@@ -64,7 +66,8 @@ const SignUpPage = () => {
         className:
           'bg-gradient-to-r from-[#ff9a86]/10 to-transparent dark:from-[#11151a] dark:to-[#0b0e12] border border-[#ff9a86]/30 text-slate-900 dark:text-white',
       });
-      router.push('/signin');
+      // router.push('/signin');
+      router.push(redirectTo);
     }
 
     if (error) {
@@ -413,7 +416,7 @@ const SignUpPage = () => {
             <div className="mt-8 text-center lg:text-left text-sm text-slate-500 dark:text-[#a3adbb]">
               Already have an account?
               <Link
-                href="/signin"
+                href={`/signin?redirect=${redirectTo}`}
                 className="font-semibold text-[#ff9a86] hover:text-[#bf7465] hover:underline underline-offset-4 transition-all duration-300 inline-block hover:-translate-y-0.5"
               >
                 Sign in

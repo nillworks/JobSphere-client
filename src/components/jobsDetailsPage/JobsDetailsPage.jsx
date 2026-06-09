@@ -10,6 +10,7 @@ import {
   Clock,
   CheckCircle2,
 } from 'lucide-react';
+import Link from 'next/link';
 
 const JobsDetailsPage = ({ singleJob }) => {
   if (!singleJob) {
@@ -33,6 +34,7 @@ const JobsDetailsPage = ({ singleJob }) => {
     maxSalary,
     currency,
     createdAt,
+    _id,
   } = singleJob;
 
   const displayLocation =
@@ -89,10 +91,13 @@ const JobsDetailsPage = ({ singleJob }) => {
           </div>
 
           <div className="flex w-full flex-col gap-3 md:w-auto md:min-w-[200px]">
-            <button className="group cursor-pointer relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#ff9a86] px-8 py-4 font-bold text-white transition-all hover:bg-[#ff8a73] hover:shadow-[0_0_20px_rgba(255,154,134,0.4)] active:scale-95">
+            <Link
+              href={`/jobs/${_id}/apply`}
+              className="group cursor-pointer relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#ff9a86] px-8 py-4 font-bold text-white transition-all hover:bg-[#ff8a73] hover:shadow-[0_0_20px_rgba(255,154,134,0.4)] active:scale-95"
+            >
               <span>Apply Now</span>
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </button>
+            </Link>
             <button className="flex w-full cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-transparent px-8 py-4 font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#1d242d] dark:text-slate-300 dark:hover:bg-[#1a2028]">
               Save for later
             </button>

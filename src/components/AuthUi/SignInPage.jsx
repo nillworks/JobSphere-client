@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -12,6 +12,8 @@ const SignInPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -33,7 +35,8 @@ const SignInPage = () => {
           'bg-gradient-to-r from-[#ff9a86]/10 to-transparent dark:from-[#11151a] dark:to-[#0b0e12] border border-[#ff9a86]/30 text-slate-900 dark:text-white',
       });
 
-      await router.replace('/');
+      router.push(redirectTo);
+      router.replace('/');
       router.refresh();
     }
 
@@ -271,7 +274,7 @@ const SignInPage = () => {
             <div className="mt-8 text-center lg:text-left text-sm text-slate-500 dark:text-[#a3adbb]">
               Dont have an account?{' '}
               <Link
-                href="/signup"
+                href={`/signup?redirect=${redirectTo}`}
                 className="font-semibold text-[#ff9a86] hover:text-[#bf7465] hover:underline underline-offset-4 transition-all duration-300 inline-block hover:-translate-y-0.5"
               >
                 Sign up now
