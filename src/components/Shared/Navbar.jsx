@@ -65,10 +65,12 @@ const Navbar = () => {
         { id: 1, name: 'Home', path: '/' },
         { id: 2, name: 'Jobs', path: '/jobs' },
         { id: 3, name: 'Company', path: '/company' },
+        { id: 4, name: 'Plans', path: '/plans' },
       ]
     : [
         { id: 1, name: 'Home', path: '/' },
         { id: 2, name: 'Jobs', path: '/jobs' },
+        { id: 3, name: 'Plans', path: '/plans' },
       ];
 
   const router = useRouter();

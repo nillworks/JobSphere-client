@@ -19,7 +19,7 @@ const ProfileDropdown = ({
       href:
         user.role === 'recruiter'
           ? '/dashboard/recruiter'
-          : '/dashboard/jobseeker',
+          : '/dashboard/seeker',
       label: 'Dashboard',
       icon: <LayoutDashboard size={16} />,
     },

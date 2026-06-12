@@ -12,6 +12,9 @@ import {
   Menu,
   X,
   Zap,
+  Search,
+  Bookmark,
+  CreditCard,
 } from 'lucide-react';
 import { useSession } from '@/lib/auth-client';
 import Image from 'next/image';
@@ -27,7 +30,40 @@ const LeftNavigationMenu = () => {
     setIsOpen(false);
   }, [pathname]);
 
-  const navItems = [
+  const seekerNavItems = [
+    {
+      name: 'Dashboard',
+      href: '/dashboard/seeker',
+      icon: LayoutDashboard,
+    },
+    {
+      name: 'Jobs',
+      href: '/dashboard/seeker/jobs',
+      icon: Search,
+    },
+    {
+      name: 'Saved Jobs',
+      href: '/dashboard/seeker/saved-jobs',
+      icon: Bookmark,
+    },
+    {
+      name: 'Applications',
+      href: '/dashboard/seeker/applications',
+      icon: FileText,
+    },
+    {
+      name: 'Billing',
+      href: '/dashboard/seeker/billing',
+      icon: CreditCard,
+    },
+    {
+      name: 'Settings',
+      href: '/dashboard/seeker/settings',
+      icon: Settings,
+    },
+  ];
+
+  const recruiterNavItems = [
     { name: 'Dashboard', href: '/dashboard/recruiter', icon: LayoutDashboard },
     {
       name: 'My Company',
@@ -42,6 +78,9 @@ const LeftNavigationMenu = () => {
     },
     { name: 'Settings', href: '/dashboard/recruiter/settings', icon: Settings },
   ];
+
+  const navItems =
+    user?.role === 'recruiter' ? recruiterNavItems : seekerNavItems;
 
   return (
     <>
