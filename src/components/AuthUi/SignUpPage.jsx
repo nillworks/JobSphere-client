@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Description, Label, RadioGroup, Radio } from '@heroui/react';
 import Link from 'next/link';
-import { authClient, signOut } from '@/lib/auth-client';
+import { authClient, signOut, useSession } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
@@ -26,6 +26,9 @@ const SignUpPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/signin';
+
+  const { data } = useSession();
+  const user = data?.user;
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
@@ -49,6 +52,8 @@ const SignUpPage = () => {
     console.log(AllData);
     setLoading(true);
 
+    const plan = user?.role === 'seeker' ? 'seeker_free' : 'recruiter_free';
+
     // Enable authentiCation Email & Password SignUp
     const { data, error } = await authClient.signUp.email({
       name: AllData?.name,
@@ -56,6 +61,7 @@ const SignUpPage = () => {
       password: AllData?.password,
       image: AllData?.image,
       role: AllData?.role,
+      plan,
       callbackURL: '/',
     });
 
