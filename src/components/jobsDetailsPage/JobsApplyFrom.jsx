@@ -24,6 +24,7 @@ const JobsApplyFrom = ({ singleJobsData, user }) => {
     try {
       const form = e.currentTarget;
       const formEntriesData = Object.fromEntries(new FormData(form));
+      console.log(singleJobsData);
 
       const newApplication = {
         jobId: singleJobsData?._id,
@@ -33,7 +34,7 @@ const JobsApplyFrom = ({ singleJobsData, user }) => {
       };
 
       const res = await postApplication(newApplication);
-      console.log(res);
+
       if (res.insertedId) {
         toast.success('Application submitted successfully!');
         form.reset();

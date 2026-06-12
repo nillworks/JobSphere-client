@@ -6,7 +6,6 @@ import Link from 'next/link';
 
 const Jobs = async () => {
   const limitJobs = await getLimitJobs();
-  console.log(limitJobs);
 
   return (
     <section id="jobs" className="py-12 sm:py-16 md:py-24">

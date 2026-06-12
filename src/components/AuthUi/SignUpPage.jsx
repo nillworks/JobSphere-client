@@ -49,7 +49,7 @@ const SignUpPage = () => {
       setError('Passwords do not match.');
       return;
     }
-    console.log(AllData);
+
     setLoading(true);
 
     const plan = user?.role === 'seeker' ? 'seeker_free' : 'recruiter_free';

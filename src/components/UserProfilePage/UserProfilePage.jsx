@@ -34,7 +34,7 @@ const UserProfilePage = () => {
     }
   }, [isPending, user, router]);
 
-  const formatDate = (dateInput) => {
+  const formatDate = dateInput => {
     if (!dateInput) return 'N/A';
     try {
       const date = new Date(dateInput);
@@ -78,7 +78,6 @@ const UserProfilePage = () => {
 
     const formData = new FormData(e.target);
     const allData = Object.fromEntries(formData.entries());
-    console.log(allData);
 
     const { data } = await authClient.updateUser({
       image: allData?.image,

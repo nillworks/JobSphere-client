@@ -10,7 +10,6 @@ export async function POST(request) {
     const formData = await request.formData();
     const planId = formData.get('plan_id');
     const priceId = PLAN_PRICE_ID[planId];
-    console.log(priceId);
 
     if (!priceId) {
       return NextResponse.json(

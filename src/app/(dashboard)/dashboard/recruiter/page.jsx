@@ -11,7 +11,6 @@ const Recruiter = async () => {
   });
 
   const user = session?.user;
-  console.log(user);
 
   return (
     <div className="flex flex-col min-h-full">

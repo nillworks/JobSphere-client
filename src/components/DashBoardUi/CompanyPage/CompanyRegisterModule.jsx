@@ -65,7 +65,6 @@ const CompanyRegisterModule = ({ isOpen, onClose }) => {
       status: 'pending',
       recruiterId: user?.id,
     };
-    console.log(newCompanyData);
 
     const res = await CrateCompany(newCompanyData);
     if (res.success) {

@@ -29,11 +29,8 @@ const ApplyPage = async ({ params }) => {
   }
 
   const application = await getApplication(user?.id);
-  // console.log(application);
-  console.log(user?.plan);
 
   const plan = await getPlanById(user?.plan);
-  console.log(plan);
 
   return (
     <section className="pt-18 py-4 container mx-auto">
