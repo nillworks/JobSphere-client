@@ -14,19 +14,21 @@ const ProfileDropdown = ({
   // const { data } = useSession();
   // const user = data?.user;
 
+  const dashboardHref = {
+    admin: '/dashboard/admin',
+    recruiter: '/dashboard/recruiter',
+    seeker: '/dashboard/seeker',
+  };
+
   const items = [
     {
-      href:
-        user.role === 'recruiter'
-          ? '/dashboard/recruiter'
-          : '/dashboard/seeker',
+      href: dashboardHref[user.role] || '/',
       label: 'Dashboard',
       icon: <LayoutDashboard size={16} />,
     },
     { href: '/profile', label: 'My Profile', icon: <User size={16} /> },
     { href: '/settings', label: 'Settings', icon: <Settings size={16} /> },
   ];
-
   return (
     <div className="relative hidden md:block" ref={profileRef}>
       {/* Avatar */}

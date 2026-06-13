@@ -72,8 +72,8 @@ const SignUpPage = () => {
         className:
           'bg-gradient-to-r from-[#ff9a86]/10 to-transparent dark:from-[#11151a] dark:to-[#0b0e12] border border-[#ff9a86]/30 text-slate-900 dark:text-white',
       });
-      // router.push('/signin');
-      router.push(redirectTo);
+      router.push('/signin');
+      // router.push(redirectTo);
     }
 
     if (error) {

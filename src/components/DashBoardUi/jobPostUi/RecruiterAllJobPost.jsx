@@ -29,7 +29,7 @@ const initialJobs = [
   },
 ];
 
-const RecruiterAllJobPost = ({ recruiterJobData }) => {
+const RecruiterAllJobPost = ({ recruiterJobData, company }) => {
   const [isCreateJobOpen, setIsCreateJobOpen] = useState(false);
 
   return (
@@ -75,6 +75,7 @@ const RecruiterAllJobPost = ({ recruiterJobData }) => {
 
       <CreateJobModule
         isOpen={isCreateJobOpen}
+        company={company}
         onClose={() => setIsCreateJobOpen(false)}
       />
     </section>

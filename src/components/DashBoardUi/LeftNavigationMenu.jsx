@@ -15,6 +15,7 @@ import {
   Search,
   Bookmark,
   CreditCard,
+  Users,
 } from 'lucide-react';
 import { useSession } from '@/lib/auth-client';
 import Image from 'next/image';
@@ -29,6 +30,39 @@ const LeftNavigationMenu = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
+  const adminNavItems = [
+    {
+      name: 'Dashboard',
+      href: '/dashboard/admin',
+      icon: LayoutDashboard,
+    },
+    {
+      name: 'Users',
+      href: '/dashboard/admin/users',
+      icon: Users,
+    },
+    {
+      name: 'Companies',
+      href: '/dashboard/admin/companies',
+      icon: Building2,
+    },
+    {
+      name: 'Jobs',
+      href: '/dashboard/admin/jobs',
+      icon: Briefcase,
+    },
+    {
+      name: 'Payments',
+      href: '/dashboard/admin/payments',
+      icon: CreditCard,
+    },
+    {
+      name: 'Settings',
+      href: '/dashboard/admin/settings',
+      icon: Settings,
+    },
+  ];
 
   const seekerNavItems = [
     {
@@ -79,8 +113,13 @@ const LeftNavigationMenu = () => {
     { name: 'Settings', href: '/dashboard/recruiter/settings', icon: Settings },
   ];
 
-  const navItems =
-    user?.role === 'recruiter' ? recruiterNavItems : seekerNavItems;
+  const roleNavItems = {
+    admin: adminNavItems,
+    recruiter: recruiterNavItems,
+    seeker: seekerNavItems,
+  };
+
+  const navItems = roleNavItems[user?.role] || seekerNavItems;
 
   return (
     <>

@@ -11,9 +11,9 @@ import {
   Clock,
 } from 'lucide-react';
 
-const StatusBadge = ({ status = 'ACTIVE' }) => {
+const StatusBadge = ({ status = 'active' }) => {
   const normalizedStatus = status.toUpperCase();
-  const isActive = normalizedStatus === 'ACTIVE';
+  const isActive = normalizedStatus === 'active';
   const isDraft = normalizedStatus === 'DRAFT';
   const isClosed = normalizedStatus === 'CLOSED';
 
@@ -143,7 +143,7 @@ const JobListShow = ({ jobsListData = [] }) => {
                     </div>
                   </td>
                   <td className="px-5 py-4">
-                    <StatusBadge status={job.status || 'ACTIVE'} />
+                    <StatusBadge status={job.status || 'active'} />
                   </td>
                   <td className="px-5 py-4">
                     {/* Actions always visible on Desktop */}
@@ -276,4 +276,3 @@ const JobListShow = ({ jobsListData = [] }) => {
 };
 
 export default JobListShow;
-
