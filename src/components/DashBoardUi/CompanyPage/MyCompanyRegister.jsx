@@ -54,10 +54,12 @@ const MyCompanyRegister = ({ company }) => {
                         ? 'bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-100 dark:border-green-500/20'
                         : company.status === 'pending'
                           ? 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-100 dark:border-yellow-500/20'
-                          : 'bg-gray-100 dark:bg-[#3b3e46] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600'
+                          : company.status === 'rejected'
+                            ? 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-100 dark:border-red-500/20'
+                            : 'bg-gray-100 dark:bg-[#3b3e46] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600'
                     }`}
                   >
-                    {company.status || 'Active'}
+                    {company.status.toUpperCase() || 'pending'}
                   </span>
                 </div>
               </div>

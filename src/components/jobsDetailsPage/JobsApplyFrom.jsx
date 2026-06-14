@@ -13,9 +13,11 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import postApplication from '@/lib/Action/postApplication';
+import { useRouter } from 'next/navigation';
 
 const JobsApplyFrom = ({ singleJobsData, user }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -36,6 +38,7 @@ const JobsApplyFrom = ({ singleJobsData, user }) => {
       const res = await postApplication(newApplication);
 
       if (res.insertedId) {
+        router.refresh();
         toast.success('Application submitted successfully!');
         form.reset();
       }

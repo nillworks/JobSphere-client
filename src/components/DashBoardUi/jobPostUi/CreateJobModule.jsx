@@ -11,6 +11,7 @@ const CreateJobModule = ({ isOpen, onClose, company }) => {
   const { data: session } = useSession();
 
   const user = session?.user;
+  console.log(company);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -61,7 +62,7 @@ const CreateJobModule = ({ isOpen, onClose, company }) => {
                 <span
                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${company.status.toLowerCase() === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : company.status.toLowerCase() === 'rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'}`}
                 >
-                  Status: {company.status}
+                  {company.status}
                 </span>
               </div>
             )}

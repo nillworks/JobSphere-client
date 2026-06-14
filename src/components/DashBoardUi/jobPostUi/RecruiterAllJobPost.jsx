@@ -75,7 +75,7 @@ const RecruiterAllJobPost = ({ recruiterJobData, company }) => {
 
       <CreateJobModule
         isOpen={isCreateJobOpen}
-        company={company}
+        company={company[0]}
         onClose={() => setIsCreateJobOpen(false)}
       />
     </section>

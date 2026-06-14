@@ -1,7 +1,13 @@
+'use server';
+import authHeader from './authHeader';
+
 const updateCompany = async (id, companyData) => {
   const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/company/${id}`, {
     method: 'PATCH',
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'content-type': 'application/json',
+      ...(await authHeader()),
+    },
     body: JSON.stringify(companyData),
   });
 

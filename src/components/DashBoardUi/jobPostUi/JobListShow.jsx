@@ -12,9 +12,9 @@ import {
 } from 'lucide-react';
 
 const StatusBadge = ({ status = 'active' }) => {
-  const normalizedStatus = status.toUpperCase();
+  const normalizedStatus = status.toLocaleLowerCase();
   const isActive = normalizedStatus === 'active';
-  const isDraft = normalizedStatus === 'DRAFT';
+  const isDraft = normalizedStatus === 'rejected';
   const isClosed = normalizedStatus === 'CLOSED';
 
   const styles = isActive
@@ -45,6 +45,8 @@ const StatusBadge = ({ status = 'active' }) => {
 
 const JobListShow = ({ jobsListData = [] }) => {
   const [expandedCard, setExpandedCard] = useState(null);
+
+  console.log(jobsListData);
 
   const toggleCard = id => {
     setExpandedCard(prev => (prev === id ? null : id));
@@ -132,18 +134,20 @@ const JobListShow = ({ jobsListData = [] }) => {
                     <div className="flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-400">
                       <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
                       <span className="truncate max-w-[150px] text-[13px]">
-                        {job.location || '—'}
+                        {job.country || '—'}
                       </span>
                     </div>
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-1.5 text-[13px] text-slate-600 dark:text-slate-400">
                       <DollarSign className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                      {job.salary || 'Negotiable'}
+                      {job.minSalary && job.maxSalary
+                        ? `${job.minSalary} - ${job.maxSalary} ${job.currency}`
+                        : 'Negotiable'}
                     </div>
                   </td>
                   <td className="px-5 py-4">
-                    <StatusBadge status={job.status || 'active'} />
+                    <StatusBadge status={job.status || 'approved'} />
                   </td>
                   <td className="px-5 py-4">
                     {/* Actions always visible on Desktop */}
@@ -225,7 +229,7 @@ const JobListShow = ({ jobsListData = [] }) => {
                       </p>
                     </div>
                   </div>
-                  <StatusBadge status={job.status || 'ACTIVE'} />
+                  <StatusBadge status={job.status || 'active'} />
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">

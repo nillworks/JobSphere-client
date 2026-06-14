@@ -8,8 +8,10 @@ const page = async () => {
 
   const data = await getRecruiterJobs(user?.id);
   const recruiterJobData = data.data;
+  console.log(recruiterJobData);
 
   const company = await getRecruiterCompany(user?.id);
+  console.log(company.data);
 
   return (
     <>

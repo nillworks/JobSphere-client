@@ -9,7 +9,9 @@ import { redirect } from 'next/navigation';
 const ApplyPage = async ({ params }) => {
   const { id } = await params;
   const user = await getUserSession();
+  console.log(user);
   const singleJobsData = await getSingleJob(id);
+  console.log(singleJobsData);
 
   if (!user) {
     redirect(`/signin?redirect=/jobs/${id}/apply`);
@@ -29,8 +31,12 @@ const ApplyPage = async ({ params }) => {
   }
 
   const application = await getApplication(user?.id);
+  console.log(application);
 
-  const plan = await getPlanById(user?.plan);
+  console.log(user);
+
+  const plan = await getPlanById(user?.plan || 'starter_plan');
+  console.log('plan', plan);
 
   return (
     <section className="pt-18 py-4 container mx-auto">
