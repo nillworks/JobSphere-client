@@ -60,7 +60,7 @@ const SignUpPage = () => {
       email: AllData?.email,
       password: AllData?.password,
       image: AllData?.image,
-      role: AllData?.role,
+      accountType: AllData?.role,
       plan,
       callbackURL: '/',
     });

@@ -23,11 +23,27 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
-      role: {
-        default: 'seeker',
+      accountType: {
+        type: 'string',
+        required: false,
       },
       plan: {
+        type: 'string',
         default: 'seeker_free',
+      },
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: (user) => {
+          return {
+            data: {
+              ...user,
+              role: user.accountType || 'seeker',
+            }
+          };
+        },
       },
     },
   },

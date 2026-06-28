@@ -8,40 +8,37 @@ const WorkTypeIcon = ({ variant }) => {
   return <Home className={className} />;
 };
 
-const JobCard = ({
-  job,
-  title,
-  description,
-  location,
-  workType,
-  workTypeVariant,
-  salary,
-}) => {
-  const displayTitle = job?.jobTitle || title;
-  const displayDescription =
-    job?.responsibilities || job?.requirements || description;
-  const displayLocation = job
-    ? `${job.city || ''}${job.city && job.country ? ', ' : ''}${job.country || ''}`
-    : location;
-  const displayWorkType = job?.jobType || workType;
-  const displayVariant = job?.isRemote
-    ? 'globe'
-    : workTypeVariant || 'building';
-  const displaySalary =
-    job?.minSalary && job?.maxSalary
-      ? `${job.currency || ''} ${job.minSalary} - ${job.maxSalary}`
-      : salary;
+const JobCard = ({ job }) => {
+  const displayTitle = job?.jobTitle;
+  const displayCompanyName = job?.companyName;
+  const displayLocation = `${job?.city || ''}${job?.city && job?.country ? ', ' : ''}${job?.country || ''}`;
+  const displayWorkType = job?.jobType;
+  const displayVariant = job?.isRemote ? 'globe' : 'building';
+  const displaySalary = job?.minSalary && job?.maxSalary
+    ? `${job.currency || ''} ${job.minSalary} - ${job.maxSalary}`
+    : '';
 
-  const _id = job._id;
+  const _id = job?._id?.$oid || job?._id;
 
   return (
     <div className="group relative cursor-pointer overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 before:absolute before:top-0 before:right-0 before:left-0 before:h-[3px] before:origin-left before:scale-x-0 before:rounded-t-2xl before:bg-gradient-to-r before:from-[#ff9a86] before:to-[#bf7465] before:transition-transform before:duration-300 hover:-translate-y-1 hover:border-[#ff9a86]/20 hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] hover:before:scale-x-100 dark:border-[#1d242d] dark:bg-[#11151a] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_20px_rgba(255,154,134,0.1)]">
-      <h3 className="mb-2 text-lg font-bold transition-colors group-hover:text-[#ff9a86]">
-        {displayTitle || 'Untitled Job'}
-      </h3>
-      <p className="mb-4 line-clamp-2 text-sm text-slate-400 dark:text-[#546881]">
-        {displayDescription || 'No description available.'}
-      </p>
+      <div className="mb-4 flex items-start gap-4">
+        {job?.companyLogo && (
+          <img
+            src={job.companyLogo}
+            alt={displayCompanyName || 'Company'}
+            className="h-12 w-12 shrink-0 rounded-lg border border-slate-100 bg-slate-50 object-contain p-1 dark:border-[#1d242d] dark:bg-[#0f1318]"
+          />
+        )}
+        <div>
+          <h3 className="mb-1 text-lg font-bold transition-colors group-hover:text-[#ff9a86] line-clamp-1">
+            {displayTitle || 'Untitled Job'}
+          </h3>
+          <p className="text-sm text-slate-400 dark:text-[#546881] line-clamp-1">
+            {displayCompanyName || 'Unknown Company'}
+          </p>
+        </div>
+      </div>
       <div className="mb-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-400 dark:border-[#1d242d] dark:bg-[#0f1318] dark:text-[#546881]">
           <MapPin className="h-3 w-3 shrink-0" />
