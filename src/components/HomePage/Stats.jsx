@@ -20,21 +20,21 @@ const Stats = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
-          <StatCard icon={ClipboardList} value="50K" label="Active Jobs" />
+          <StatCard icon={<ClipboardList className="h-5 w-5 shrink-0 text-[#ff9a86]" />} value="50K" label="Active Jobs" />
           <StatCard
-            icon={Building2}
+            icon={<Building2 className="h-5 w-5 shrink-0 text-[#ff9a86]" />}
             value="12K"
             label="Companies"
             delayClass="delay-100"
           />
           <StatCard
-            icon={Users}
+            icon={<Users className="h-5 w-5 shrink-0 text-[#ff9a86]" />}
             value="2M"
             label="Job Seekers"
             delayClass="delay-200"
           />
           <StatCard
-            icon={Star}
+            icon={<Star className="h-5 w-5 shrink-0 text-[#ff9a86]" />}
             value="97%"
             label="Satisfaction Rate"
             delayClass="delay-300"
