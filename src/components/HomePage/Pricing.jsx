@@ -4,6 +4,7 @@ import { useState } from 'react';
 import PricingCard, { PricingFeature } from '@/components/Shared/PricingCard';
 import SectionBadge from '@/components/Shared/SectionBadge';
 import SectionShell from '@/components/Shared/SectionShell';
+import { SlideUp, StaggerContainer, StaggerItem } from '@/components/Shared/MotionWrapper';
 
 const pricingPlans = [
   {
@@ -69,54 +70,57 @@ const Pricing = () => {
   return (
     <section id="pricing" className="py-12 sm:py-16 md:py-24">
       <SectionShell>
-        <div className="mb-12 text-center">
-          <SectionBadge label="Pricing" />
-          <h2 className="mb-8 text-3xl font-extrabold md:text-4xl">
-            Pay for the leverage, not the listings
-          </h2>
+        <SlideUp>
+          <div className="mb-12 text-center">
+            <SectionBadge label="Pricing" />
+            <h2 className="mb-8 text-3xl font-extrabold md:text-4xl">
+              Pay for the leverage, not the listings
+            </h2>
 
-          <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white p-1 dark:border-[#1d242d] dark:bg-[#11151a]">
-            <button
-              type="button"
-              onClick={() => setBilling('monthly')}
-              className={isMonthly ? activeBtn : inactiveBtn}
-            >
-              Monthly
-            </button>
-            <button
-              type="button"
-              onClick={() => setBilling('yearly')}
-              className={`flex items-center gap-2 ${!isMonthly ? activeBtn : inactiveBtn}`}
-            >
-              Yearly
-              <span className="rounded-full bg-[#ff9a86]/20 px-2 py-0.5 text-xs text-[#ff9a86]">
-                Save 25%
-              </span>
-            </button>
+            <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white p-1 dark:border-[#1d242d] dark:bg-[#11151a]">
+              <button
+                type="button"
+                onClick={() => setBilling('monthly')}
+                className={isMonthly ? activeBtn : inactiveBtn}
+              >
+                Monthly
+              </button>
+              <button
+                type="button"
+                onClick={() => setBilling('yearly')}
+                className={`flex items-center gap-2 ${!isMonthly ? activeBtn : inactiveBtn}`}
+              >
+                Yearly
+                <span className="rounded-full bg-[#ff9a86]/20 px-2 py-0.5 text-xs text-[#ff9a86]">
+                  Save 25%
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
+        </SlideUp>
 
-        <div className="mx-auto grid max-w-5xl grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <StaggerContainer className="mx-auto grid max-w-5xl grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {pricingPlans.map(plan => (
-            <PricingCard
-              key={plan.name}
-              featured={plan.featured}
-              name={plan.name}
-              subtitle={plan.subtitle}
-              price={isMonthly ? plan.monthlyPrice : plan.yearlyPrice}
-              period={isMonthly ? '/month' : '/year'}
-              iconType={plan.iconType}
-              iconClass={plan.iconClass}
-              id={plan.id}
-            >
-              {plan.features.map(feature => (
-                <PricingFeature key={feature} accent={plan.featured}>
-                  {feature}
-                </PricingFeature>
-              ))}
-            </PricingCard>
+            <StaggerItem key={plan.name}>
+              <PricingCard
+                featured={plan.featured}
+                name={plan.name}
+                subtitle={plan.subtitle}
+                price={isMonthly ? plan.monthlyPrice : plan.yearlyPrice}
+                period={isMonthly ? '/month' : '/year'}
+                iconType={plan.iconType}
+                iconClass={plan.iconClass}
+                id={plan.id}
+              >
+                {plan.features.map(feature => (
+                  <PricingFeature key={feature} accent={plan.featured}>
+                    {feature}
+                  </PricingFeature>
+                ))}
+              </PricingCard>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </SectionShell>
     </section>
   );
