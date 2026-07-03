@@ -50,7 +50,7 @@ const JobsApplyFrom = ({ singleJobsData, user }) => {
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-3xl px-4 pt-4 pb-12 sm:px-6 lg:px-8">
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-[#1d242d] dark:bg-[#11151a]">
         {/* Header */}
         <div className="relative border-b border-slate-200 bg-slate-50/50 px-8 py-8 dark:border-[#1d242d] dark:bg-[#11151a]/50">

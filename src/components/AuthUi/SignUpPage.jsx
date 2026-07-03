@@ -52,7 +52,7 @@ const SignUpPage = () => {
 
     setLoading(true);
 
-    const plan = user?.role === 'seeker' ? 'seeker_free' : 'recruiter_free';
+    const plan = AllData?.role === 'seeker' ? 'seeker_free' : 'recruiter_free';
 
     // Enable authentiCation Email & Password SignUp
     const { data, error } = await authClient.signUp.email({

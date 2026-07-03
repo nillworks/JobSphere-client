@@ -34,6 +34,9 @@ const JobsDetailsPage = ({ singleJob }) => {
     maxSalary,
     currency,
     createdAt,
+    skills,
+    experienceLevel,
+    education,
     _id,
   } = singleJob;
 
@@ -148,6 +151,26 @@ const JobsDetailsPage = ({ singleJob }) => {
             </div>
           )}
 
+          {/* Skills */}
+          {skills && skills.length > 0 && (
+            <div className="group rounded-2xl border border-slate-200 bg-white p-8 transition-all duration-300 hover:shadow-md dark:border-[#1d242d] dark:bg-[#11151a] dark:hover:border-slate-700">
+              <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-white">
+                <span className="h-6 w-2 rounded-full bg-[#ff9a86]" />
+                Required Skills
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                {skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 dark:bg-[#1a2028] dark:text-[#a3adbb]"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Fallback description if no requirements/responsibilities */}
           {!responsibilities && !requirements && singleJob.description && (
             <div className="group rounded-2xl border border-slate-200 bg-white p-8 transition-all duration-300 hover:shadow-md dark:border-[#1d242d] dark:bg-[#11151a] dark:hover:border-slate-700">
@@ -198,6 +221,36 @@ const JobsDetailsPage = ({ singleJob }) => {
                   </p>
                 </div>
               </div>
+              {experienceLevel && (
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#fff5f3] text-[#ff9a86] dark:bg-[#ff9a86]/10">
+                    <Briefcase className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-400 dark:text-[#546881]">
+                      Experience
+                    </p>
+                    <p className="font-semibold text-slate-700 dark:text-slate-200">
+                      {experienceLevel}
+                    </p>
+                  </div>
+                </div>
+              )}
+              {education && (
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#fff5f3] text-[#ff9a86] dark:bg-[#ff9a86]/10">
+                    <Globe className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-400 dark:text-[#546881]">
+                      Education
+                    </p>
+                    <p className="font-semibold text-slate-700 dark:text-slate-200">
+                      {education}
+                    </p>
+                  </div>
+                </div>
+              )}
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#fff5f3] text-[#ff9a86] dark:bg-[#ff9a86]/10">
                   <CircleDollarSign className="h-5 w-5" />

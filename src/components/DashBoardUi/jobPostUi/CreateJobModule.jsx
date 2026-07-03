@@ -26,6 +26,7 @@ const CreateJobModule = ({ isOpen, onClose, company }) => {
       companyLogo: company.logo,
       companyName: company.companyName,
       companyId: company._id,
+      skills: data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
     };
 
     const res = await CrateJob(newJob);
@@ -219,6 +220,80 @@ const CreateJobModule = ({ isOpen, onClose, company }) => {
                         </svg>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Experience Level */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="experienceLevel"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      Experience Level
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="experienceLevel"
+                        name="experienceLevel"
+                        defaultValue=""
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent dark:bg-[#222] dark:border-[#333] dark:text-white dark:focus:ring-white transition-all text-sm appearance-none cursor-pointer"
+                        required
+                      >
+                        <option value="" disabled>Select experience...</option>
+                        <option value="Entry Level">Entry Level</option>
+                        <option value="Mid Level">Mid Level</option>
+                        <option value="Senior Level">Senior Level</option>
+                        <option value="Executive">Executive</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Education */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="education"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      Education Level
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="education"
+                        name="education"
+                        defaultValue=""
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent dark:bg-[#222] dark:border-[#333] dark:text-white dark:focus:ring-white transition-all text-sm appearance-none cursor-pointer"
+                        required
+                      >
+                        <option value="" disabled>Select education...</option>
+                        <option value="High School">High School</option>
+                        <option value="Bachelor's Degree">Bachelor's Degree</option>
+                        <option value="Master's Degree">Master's Degree</option>
+                        <option value="PhD">PhD</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Skills */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="skills"
+                      className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      Required Skills
+                    </label>
+                    <input
+                      type="text"
+                      id="skills"
+                      name="skills"
+                      placeholder="e.g. React, Node.js (comma separated)"
+                      className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent dark:bg-[#222] dark:border-[#333] dark:text-white dark:focus:ring-white transition-all text-sm"
+                      required
+                    />
                   </div>
 
                   {/* Application Deadline */}
